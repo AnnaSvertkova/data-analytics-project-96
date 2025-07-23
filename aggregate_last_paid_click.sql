@@ -53,14 +53,14 @@ tab4 as (
 )
 
 select
-    t4.visit_date,
+    to_char(t4.visit_date, 'YYYY-MM-DD'),
     t4.utm_source,
     t4.utm_medium,
     t4.utm_campaign,
     count(t4.visitor_id) as visitors_count,
-    tab2.total_cost,
+    sum(tab2.total_cost) as total_cost,
     count(l.lead_id) as leads_count,
-     tab.purchases_count,
+    COALESCE(SUM(CASE WHEN l.closing_reason = 'Успешно реализовано' OR l.status_id = 142 THEN 1 ELSE 0 END), 0) AS purchases_count,
     sum(l.amount) as revenue
 from tab4 as t4
 inner join
@@ -77,9 +77,7 @@ left join tab2
 group by
     t4.visit_date, t4.utm_source,
     t4.utm_medium,
-    t4.utm_campaign,
-    tab2.total_cost,
-    tab.purchases_count
+    t4.utm_campaign
 order by
     revenue desc nulls last,
     t4.visit_date asc,
