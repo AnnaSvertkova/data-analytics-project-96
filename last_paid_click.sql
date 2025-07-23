@@ -35,7 +35,7 @@ select
     l.closing_reason,
     l.status_id
 from tab2 as t
-left join
+inner join
     leads as l
     on t.visitor_id = l.visitor_id and t.visit_date <= l.created_at
 order by
