@@ -57,10 +57,10 @@ select
     t4.utm_source,
     t4.utm_medium,
     t4.utm_campaign,
-    tab2.total_cost,
-    tab.purchases_count,
     count(t4.visitor_id) as visitors_count,
+    tab2.total_cost,
     count(l.lead_id) as leads_count,
+     tab.purchases_count,
     sum(l.amount) as revenue
 from tab4 as t4
 inner join
