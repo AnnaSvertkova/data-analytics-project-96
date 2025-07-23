@@ -54,10 +54,10 @@ tab4 as (
 
 select
     to_char(t4.visit_date, 'YYYY-MM-DD'),
-    count(t4.visitor_id) as visitors_count,
     t4.utm_source,
     t4.utm_medium,
     t4.utm_campaign,
+    count(t4.visitor_id) as visitors_count,
     sum(tab2.total_cost) as total_cost,
     count(l.lead_id) as leads_count,
     SUM(CASE WHEN l.closing_reason = 'Успешно реализовано' OR l.status_id = 142 THEN 1 ELSE 0 END) AS purchases_count,
