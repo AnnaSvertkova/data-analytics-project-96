@@ -1,13 +1,18 @@
+
 with tab as (
     select
-        visitor_id,
-        count(lead_id) as purchases_count
-    from leads
-    where closing_reason = 'Успешная продажа' or status_id = 142
-    group by visitor_id
+        s.visitor_id,
+        s.visit_date,
+        s.source as utm_source,
+        s.medium as utm_medium,
+        s.campaign as utm_campaign,
+        row_number()
+            over (partition by s.visitor_id order by s.visit_date desc)
+            as rn
+    from sessions as s
+    where s.medium in ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
 ),
-
-tab2 as (
+tab1 as (
     select
         campaign_date,
         utm_source,
@@ -26,62 +31,55 @@ tab2 as (
     from ya_ads
     group by campaign_date, utm_source, utm_medium, utm_campaign
 ),
-
-tab3 as (
-    select
-        s.visitor_id,
-        s.visit_date,
-        s.source as utm_source,
-        s.medium as utm_medium,
-        s.campaign as utm_campaign,
-        row_number()
-            over (partition by s.visitor_id order by s.visit_date desc)
-            as rn
-    from sessions as s
-    where s.medium in ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
-),
-
-tab4 as (
+tab2 as (
     select
         visitor_id,
         visit_date,
         utm_source,
         utm_medium,
         utm_campaign
-    from tab3
+    from tab
     where rn = 1
+),
+tab3 as (
+    select
+        visitor_id,
+        count(lead_id) as purchases_count
+    from leads
+    where closing_reason = 'Успешная продажа' or status_id = 142
+    group by visitor_id
 )
 
 select
-    to_char(t4.visit_date, 'YYYY-MM-DD'),
-    count(t4.visitor_id) as visitors_count,
-    t4.utm_source,
-    t4.utm_medium,
-    t4.utm_campaign,
-    sum(tab2.total_cost) as total_cost,
+   to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
+    t.utm_source,
+    t.utm_medium,
+    t.utm_campaign,
+    count(t.visitor_id) as visitors_count,
+    sum (t1.total_cost) as total_cost,
     count(l.lead_id) as leads_count,
-    sum(l.amount) as revenue,
-    SUM(CASE WHEN l.closing_reason = 'Успешно реализовано' OR l.status_id = 142 THEN 1 ELSE 0 END) AS purchases_count
-    from tab4 as t4
+    count (t3.purchases_count) as purchases_count,
+    sum(l.amount) as revenue
+from tab2 as t
 inner join
     leads as l
-    on t4.visitor_id = l.visitor_id and t4.visit_date <= l.created_at
-left join tab on t4.visitor_id = tab.visitor_id
-left join tab2
+    on t.visitor_id = l.visitor_id and t.visit_date <= l.created_at
+ inner join tab1 as t1
     on
-        to_char(t4.visit_date, 'YYYY-MM-DD')
-        = to_char(tab2.campaign_date, 'YYYY-MM-DD')
-        and t4.utm_source = tab2.utm_source
-        and t4.utm_medium = tab2.utm_medium
-        and t4.utm_campaign = tab2.utm_campaign
-group by
-    t4.visit_date, t4.utm_source,
-    t4.utm_medium,
-    t4.utm_campaign
+        to_char(t.visit_date, 'YYYY-MM-DD')
+        = to_char(t1.campaign_date, 'YYYY-MM-DD')
+        and t.utm_source = t1.utm_source
+        and t.utm_medium = t1.utm_medium
+        and t.utm_campaign = t1.utm_campaign
+inner join
+    tab3 as t3
+    on t.visitor_id = t3.visitor_id
+       group by  to_char(t.visit_date, 'YYYY-MM-DD'), 
+       t.utm_source,
+    t.utm_medium,
+    t.utm_campaign
 order by
-    revenue desc nulls last,
-    t4.visit_date asc,
-    visitors_count desc,
-    t4.utm_source asc,
-    t4.utm_medium asc,
-    t4.utm_campaign asc;
+    visit_date asc,
+    t.utm_source asc,
+    t.utm_medium asc,
+    t.utm_campaign asc;
