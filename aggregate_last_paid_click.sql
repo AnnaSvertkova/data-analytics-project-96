@@ -1,85 +1,79 @@
+WITH combined_ads AS (
+    SELECT 
+        campaign_date AS visit_date,
+        utm_source AS source,
+        utm_medium AS medium,
+        utm_campaign AS campaign,
+        utm_content AS content,
+        SUM(daily_spent) AS total_cost
+    FROM (
+        SELECT 
+            campaign_date,
+            utm_source,
+            utm_medium,
+            utm_campaign,
+            utm_content,
+            daily_spent
+        FROM ya_ads
+        UNION ALL
+        SELECT 
+            campaign_date,
+            utm_source,
+            utm_medium,
+            utm_campaign,
+            utm_content,
+            daily_spent
+        FROM vk_ads
+    ) AS ads
+    GROUP BY visit_date, source, medium, campaign, content
+),
 
-with tab as (
-    select
+last_session_per_visitor AS (
+    SELECT
         s.visitor_id,
         s.visit_date,
-        s.source as utm_source,
-        s.medium as utm_medium,
-        s.campaign as utm_campaign,
-        row_number()
-            over (partition by s.visitor_id order by s.visit_date desc)
-            as rn
-    from sessions as s
-    where s.medium in ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
+        s.source AS utm_source,
+        s.medium AS utm_medium,
+        s.campaign AS utm_campaign,
+        ROW_NUMBER() OVER (PARTITION BY s.visitor_id ORDER BY s.visit_date DESC) AS rn
+    FROM sessions AS s
+    WHERE s.medium IN ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
 ),
-tab1 as (
-    select
-        campaign_date,
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        sum(daily_spent) as total_cost
-    from vk_ads
-    group by campaign_date, utm_source, utm_medium, utm_campaign
-    union all
-    select
-        campaign_date,
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        sum(daily_spent) as total_cost
-    from ya_ads
-    group by campaign_date, utm_source, utm_medium, utm_campaign
-),
-tab2 as (
-    select
+
+last_session_data AS (
+    SELECT
         visitor_id,
         visit_date,
         utm_source,
         utm_medium,
         utm_campaign
-    from tab
-    where rn = 1
-),
-tab3 as (
-    select
-        visitor_id,
-        count(lead_id) as purchases_count
-    from leads
-    where closing_reason = 'Успешная продажа' or status_id = 142
-    group by visitor_id
+    FROM last_session_per_visitor
+    WHERE rn = 1
 )
 
-select
-   to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
-    t.utm_source,
-    t.utm_medium,
-    t.utm_campaign,
-    count(t.visitor_id) as visitors_count,
-    sum (t1.total_cost) as total_cost,
-    count(l.lead_id) as leads_count,
-    count (t3.purchases_count) as purchases_count,
-    sum(l.amount) as revenue
-from tab2 as t
-inner join
-    leads as l
-    on t.visitor_id = l.visitor_id and t.visit_date <= l.created_at
- inner join tab1 as t1
-    on
-        to_char(t.visit_date, 'YYYY-MM-DD')
-        = to_char(t1.campaign_date, 'YYYY-MM-DD')
-        and t.utm_source = t1.utm_source
-        and t.utm_medium = t1.utm_medium
-        and t.utm_campaign = t1.utm_campaign
-inner join
-    tab3 as t3
-    on t.visitor_id = t3.visitor_id
-       group by  to_char(t.visit_date, 'YYYY-MM-DD'), 
-       t.utm_source,
-    t.utm_medium,
-    t.utm_campaign
-order by
-    visit_date asc,
-    t.utm_source asc,
-    t.utm_medium asc,
-    t.utm_campaign asc;
+SELECT
+    TO_CHAR(t4.visit_date, 'YYYY-MM-DD') AS formatted_visit_date,
+    t4.utm_source,
+    t4.utm_medium,
+    t4.utm_campaign,
+    COUNT(t4.visitor_id) AS visitors_count,
+    SUM(tab.total_cost) AS total_cost,
+    COUNT(l.lead_id) AS leads_count,
+    SUM(l.amount) AS revenue,
+    SUM(CASE WHEN l.closing_reason = 'Успешно реализовано' OR l.status_id = 142 THEN 1 ELSE 0 END) AS purchases_count
+FROM last_session_data AS t4
+INNER JOIN leads AS l ON t4.visitor_id = l.visitor_id AND t4.visit_date <= l.created_at
+LEFT JOIN combined_ads AS tab ON 
+    TO_CHAR(t4.visit_date, 'YYYY-MM-DD') = TO_CHAR(tab.visit_date, 'YYYY-MM-DD')
+    AND t4.utm_source = tab.source
+    AND t4.utm_medium = tab.medium
+    AND t4.utm_campaign = tab.campaign
+GROUP BY
+    t4.visit_date, t4.utm_source, t4.utm_medium, t4.utm_campaign
+ORDER BY
+    revenue DESC NULLS LAST,
+    t4.visit_date ASC,
+    visitors_count DESC,
+    t4.utm_source ASC,
+    t4.utm_medium ASC,
+    t4.utm_campaign ASC;
