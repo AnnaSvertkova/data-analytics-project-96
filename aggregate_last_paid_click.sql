@@ -35,14 +35,14 @@ tab1 AS (
     WHERE s.medium IN ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
 )
 
-SELECT
+select
+	TO_CHAR(t1.visit_date, 'YYYY-MM-DD') AS visit_date,
     t1.utm_source,
     t1.utm_medium,
     t1.utm_campaign,
-    TO_CHAR(t1.visit_date, 'YYYY-MM-DD') AS visit_date,
     COUNT(t1.visitor_id) AS visitors_count,
+    SUM(t.total_cost) AS total_cost,
     COUNT(l.lead_id) AS leads_count,
-    SUM(l.amount) AS revenue,
     SUM(
         CASE
             WHEN
@@ -51,7 +51,7 @@ SELECT
             ELSE 0
         END
     ) AS purchases_count,
-    SUM(t.total_cost) AS total_cost
+    SUM(l.amount) AS revenue
 FROM tab1 AS t1
 INNER JOIN leads AS l
     ON t1.visitor_id = l.visitor_id AND t1.visit_date <= l.created_at
@@ -75,6 +75,8 @@ ORDER BY
     t1.utm_source ASC,
     t1.utm_medium ASC,
     t1.utm_campaign ASC;
+
+
 
 
 
