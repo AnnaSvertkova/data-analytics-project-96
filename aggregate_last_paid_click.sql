@@ -4,7 +4,6 @@ WITH combined_ads AS (
         utm_source AS source,
         utm_medium AS medium,
         utm_campaign AS campaign,
-        utm_content AS content,
         SUM(daily_spent) AS total_cost
     FROM (
         SELECT 
@@ -12,7 +11,6 @@ WITH combined_ads AS (
             utm_source,
             utm_medium,
             utm_campaign,
-            utm_content,
             daily_spent
         FROM ya_ads
         UNION ALL
@@ -21,11 +19,10 @@ WITH combined_ads AS (
             utm_source,
             utm_medium,
             utm_campaign,
-            utm_content,
             daily_spent
         FROM vk_ads
     ) AS ads
-    GROUP BY visit_date, source, medium, campaign, content
+    GROUP BY visit_date, source, medium, campaign
 ),
 
 last_session_per_visitor AS (
