@@ -1,16 +1,65 @@
-"visit_date","utm_source","utm_medium","utm_campaign","total_cost","purchases_count","visitors_count","leads_count","revenue"
-2023-06-01 10:40:28.000,yandex,cpc,prof-frontend,57138,1,1,1,237990
-2023-06-01 19:27:00.000,yandex,cpc,freemium,21654,1,2,2,232766
-2023-06-01 14:39:00.000,yandex,cpc,base-frontend,18061,1,1,1,201150
-2023-06-01 04:58:00.000,vk,cpc,freemium-frontend,3160,1,1,1,189210
-2023-06-01 10:44:00.000,yandex,cpc,freemium,21654,1,1,1,188991
-2023-06-01 14:57:00.000,yandex,cpc,prof-frontend,57138,1,1,1,180306
-2023-06-01 03:41:00.000,vk,cpc,prof-java,3115,1,1,1,178800
-2023-06-01 19:39:00.000,yandex,cpc,prof-frontend,57138,1,1,1,167625
-2023-06-01 11:34:00.000,yandex,cpc,base-python,12524,1,1,1,160920
-2023-06-20 15:15:04.701,telegram,cpp,base-java,,1,1,1,151192
-2023-06-01 16:43:00.000,yandex,cpc,dod-php,5964,1,1,1,150255
-2023-06-01 15:46:00.000,yandex,cpc,prof-data-analytics,10086,1,1,1,144244
-2023-06-01 08:33:02.000,yandex,cpc,prof-python,33026,1,1,1,134100
-2023-06-01 10:54:00.000,yandex,cpc,freemium,21654,1,1,1,134100
-2023-06-01 19:10:00.000,yandex,cpc,base-professions-retarget,151,1,1,1,134100
+"visit_date","utm_source","utm_medium","utm_campaign","visitors_count","total_cost","leads_count","purchases_count","revenue"
+"2023-06-01",yandex,cpc,freemium,100,2165400,100,25,1654810
+"2023-06-01",yandex,cpc,prof-frontend,73,4171074,73,12,1057000
+"2023-06-01",yandex,cpc,prof-python,61,2014586,61,7,613196
+"2023-06-01",yandex,cpc,base-python,28,350672,28,7,476021
+"2023-06-01",vk,cpc,prof-python,40,81120,40,5,355564
+"2023-06-01",vk,cpc,freemium-frontend,43,135880,43,5,338083
+"2023-06-01",yandex,cpc,prof-java,49,1445010,49,4,284590
+"2023-06-01",yandex,cpc,base-frontend,39,704379,39,3,268515
+"2023-06-01",vk,cpc,prof-java,23,71645,23,2,232726
+"2023-06-01",yandex,cpc,prof-data-analytics,14,141204,14,2,220264
+"2023-06-01",yandex,cpc,prof-professions-brand,13,62634,13,3,154287
+"2023-06-20",telegram,cpp,base-java,1,,1,1,151192
+"2023-06-01",yandex,cpc,dod-php,4,23856,4,1,150255
+"2023-06-01",yandex,cpc,base-professions-retarget,4,604,4,1,134100
+"2023-06-07",vk,social,hexlet-blog,1,,1,1,84000
+"2023-06-01",yandex,cpc,base-java,20,385040,20,1,48000
+"2023-06-01",yandex,cpc,dod-professions,6,,6,1,37800
+"2023-06-01",vk,cpc,base-python,36,91332,36,1,9072
+"2023-06-01",vk,cpc,freemium-python,25,24500,25,1,1560
+"2023-06-01",vk,cpc,prof-data-analytics,30,32160,30,0,0
+"2023-06-01",vk,cpc,freemium-java,24,11688,24,0,0
+"2023-06-01",yandex,cpc,prof-professions-retarget,10,17140,10,0,0
+"2023-06-01",vk,cpc,prof-frontend,7,,7,0,0
+"2023-06-01",vk,cpm,prof-data-analytics,6,2310,6,0,0
+"2023-06-01",yandex,cpc,dod-java,4,11624,4,0,0
+"2023-06-01",yandex,cpc,dod-frontend,3,8613,3,0,0
+"2023-06-01",yandex,cpc,dod-python-java,3,,3,0,0
+"2023-06-01",telegram,cpp,prof-python,1,,1,0,0
+"2023-06-02",telegram,cpp,prof-frontend,1,,1,0,0
+"2023-06-03",vk-senler,cpc,freemium,1,,1,0,0
+"2023-06-04",admitad,cpa,admitad,1,,1,0,0
+"2023-06-05",vk,cpp,dod-php,1,,1,0,0
+"2023-06-06",vc,cpp,dod-frontend,1,,1,0,0
+"2023-06-06",vk,social,hexlet-blog,1,,1,0,0
+"2023-06-07",telegram,cpp,dod-java,1,,1,0,0
+"2023-06-07",telegram,cpp,prof-java,1,,1,0,0
+"2023-06-08",telegram,cpp,dod-frontend,1,,1,0,0
+"2023-06-08",telegram,cpp,dod-java,1,,1,0,0
+"2023-06-08",telegram,cpp,prof-python,1,,1,0,0
+"2023-06-09",telegram,cpp,prof-java,1,,1,0,0
+"2023-06-09",vk,cpc,prof-frontend,1,5077,1,0,0
+"2023-06-13",vk,cpc,freemium-frontend,1,2746,1,0,0
+"2023-06-13",vk,cpc,prof-java,1,4350,1,0,0
+"2023-06-14",vc,cpp,dod-frontend,2,,2,0,0
+"2023-06-14",telegram,social,dod-professions,1,,1,0,0
+"2023-06-15",dzen,social,dzen_post,1,,1,0,0
+"2023-06-15",vk,cpc,prof-frontend,1,4688,1,0,0
+"2023-06-16",telegram,social,dod-professions,1,,1,0,0
+"2023-06-16",vk,cpc,prof-frontend,1,5458,1,0,0
+"2023-06-16",vk,cpc,prof-java,1,4427,1,0,0
+"2023-06-20",admitad,cpa,admitad,1,,1,0,0
+"2023-06-20",instagram,social,prof-qa-auto,1,,1,0,0
+"2023-06-20",vc,cpp,dod-professions,1,,1,0,0
+"2023-06-21",telegram,cpp,prof-python,1,,1,0,0
+"2023-06-23",admitad,cpa,admitad,1,,1,0,0
+"2023-06-23",telegram,cpp,prof-java,1,,1,0,0
+"2023-06-24",admitad,cpa,admitad,2,,2,0,0
+"2023-06-24",vk,social,hexlet-blog,1,,1,0,0
+"2023-06-28",vk,cpc,freemium-python,1,1954,1,0,0
+"2023-06-29",vk,cpc,prof-frontend,1,5442,1,0,0
+"2023-06-30",telegram,cpp,prof-java,1,,1,0,0
+"2023-06-30",telegram,cpp,prof-python,1,,1,0,0
+"2023-06-30",vk,cpc,freemium-python,1,2101,1,0,0
+"2023-06-30",vk,cpc,prof-frontend,1,4306,1,0,0
