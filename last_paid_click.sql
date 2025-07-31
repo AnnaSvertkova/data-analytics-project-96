@@ -12,7 +12,7 @@ with tab as (
         l.status_id,
         row_number()
             over (
-                partition by s.visitor_id, l.lead_id order by s.visit_date desc
+                partition by s.visitor_id order by s.visit_date desc
             )
             as rn
     from sessions as s
