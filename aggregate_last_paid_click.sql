@@ -7,9 +7,9 @@ tab AS (
         utm_campaign,
         SUM(daily_spent) AS total_cost
     FROM ya_ads
-    GROUP BY campaign_date, utm_source, utm_medium, utm_campaign
+    GROUP BY  campaign_date, utm_source, utm_medium, utm_campaign
 
-    UNION ALL
+    union all
 
     SELECT
         campaign_date,
@@ -29,20 +29,19 @@ tab1 AS (
         s.campaign AS utm_campaign,
         s.visitor_id,
         ROW_NUMBER()
-            OVER (PARTITION BY s.visitor_id ORDER BY s.visit_date DESC)
-            AS rn
+            OVER (PARTITION BY s.visitor_id ORDER BY s.visit_date DESC) AS rn
     FROM sessions AS s
     WHERE s.medium IN ('cpc', 'cpm', 'cpa', 'youtube', 'cpp', 'tg', 'social')
 )
 
-select
-	TO_CHAR(t1.visit_date, 'YYYY-MM-DD') AS visit_date,
+SELECT
+    TO_CHAR(t1.visit_date, 'YYYY-MM-DD') AS visit_date,
+    COUNT(DISTINCT t1.visitor_id) AS visitors_count,  -- Уникальные посетители
     t1.utm_source,
     t1.utm_medium,
     t1.utm_campaign,
-    COUNT(t1.visitor_id) AS visitors_count,
     SUM(t.total_cost) AS total_cost,
-    COUNT(l.lead_id) AS leads_count,
+    COUNT(DISTINCT l.lead_id) AS leads_count,  -- Уникальные лиды
     SUM(
         CASE
             WHEN
@@ -53,9 +52,9 @@ select
     ) AS purchases_count,
     SUM(l.amount) AS revenue
 FROM tab1 AS t1
-INNER JOIN leads AS l
+LEFT JOIN leads AS l
     ON t1.visitor_id = l.visitor_id AND t1.visit_date <= l.created_at
-LEFT JOIN tab AS t
+left JOIN tab AS t
     ON
         TO_CHAR(t1.visit_date, 'YYYY-MM-DD')
         = TO_CHAR(t.campaign_date, 'YYYY-MM-DD')
@@ -75,11 +74,3 @@ ORDER BY
     t1.utm_source ASC,
     t1.utm_medium ASC,
     t1.utm_campaign ASC;
-
-
-
-
-
-
-       
-   
